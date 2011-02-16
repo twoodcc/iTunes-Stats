@@ -5,9 +5,9 @@ Report Name: 500 Most Played Songs
 Description: Shows a list of your songs in order of "most listened to".
 Category: Song
 Report URL: http://www.alexking.org/software/itunes_stats/
-Version: 1.0
-Author: Alex King
-Author URL: http://www.alexking.org/
+Version: 1.2
+Author: Tim Wood
+Author URL: http://twitter.com/twood3/
 */
 
 $title = '500 Most Played Songs';
@@ -17,13 +17,14 @@ $result = mysql_query("
 	  a.name AS artist_name
 	, b.name AS album_name
 	, s.name as song_name
-	, s.play_count as play_count
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."artist` a
+	, FORMAT(s.play_count, 0) as play_count
+    , s.play_count as play_count2
+	FROM song s
+	JOIN artist a
 	ON s.artist = a.id
-	JOIN `".$database_table_prefix."album` b
+	JOIN album b
 	ON s.album = b.id
-	ORDER BY play_count DESC
+	ORDER BY play_count2 DESC
 	LIMIT 500
 ") or die(mysql_error());
 $grid = new grid;

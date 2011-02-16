@@ -17,16 +17,16 @@ $result = mysql_query("
 	  a.name AS artist_name
 	, b.name AS album_name
 	, s.name AS song_name
-	, s.play_count AS play_count
+	, FORMAT(s.play_count, 0) AS play_count
 	, s.rating AS rating
-	, s.rating * s.play_count AS rank
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."artist` a
+	, FORMAT(s.rating * s.play_count, 0) AS rank
+    , s.rating * s.play_count AS rank2
+	FROM song s
+	JOIN artist a
 	ON s.artist = a.id
-	JOIN `".$database_table_prefix."album` b
+	JOIN album b
 	ON s.album = b.id
-	GROUP BY s.name
-	ORDER BY rank DESC
+	ORDER BY rank2 DESC
 	LIMIT 500
 ") or die(mysql_error());
 $grid = new grid;

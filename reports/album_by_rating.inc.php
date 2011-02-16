@@ -18,10 +18,10 @@ $result = mysql_query("
 	, a.name AS artist_name
 	, ROUND(AVG(s.rating), 2) AS rating
 	, count(s.id) AS songs
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."album` b
+	FROM song s
+	JOIN album b
 	ON s.album = b.id
-	JOIN `".$database_table_prefix."artist` a
+	JOIN artist a
 	ON s.artist = a.id
 	WHERE s.rating > 0
 	GROUP BY b.id

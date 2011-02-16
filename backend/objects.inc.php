@@ -2,8 +2,8 @@
 
 // iTunes Stats
 //
-// Copyright (c) 2005-2010 Alex King. All rights reserved.
-// http://alexking.org
+// Copyright (c) 2005 Alex King. All rights reserved.
+// http://www.alexking.org/
 //
 // Released under the GPL license
 // http://www.opensource.org/licenses/gpl-license.php
@@ -25,7 +25,7 @@ class artist {
 		
 		mysql_query("
 			INSERT 
-			INTO `".$database_table_prefix."artist`
+			INTO artist
 			( `name`
 			)
 			VALUES 
@@ -50,7 +50,7 @@ class album {
 		
 		mysql_query("
 			INSERT 
-			INTO `".$database_table_prefix."album`
+			INTO album
 			( `name`
 			, `artist`
 			)
@@ -73,12 +73,21 @@ class song {
 	var $album_id;
 	var $play_count;
 	var $rating;
+    var $total_time;
+    var $size;
+    var $year;
+    var $play_date;
 	
 	function song() {
 		$this->artist_id = 0;
 		$this->album_id = 0;
+        $this->size = 0;
+        $this->total_time = 0;
+        $this->year = 0;
 		$this->play_count = 0;
+        $this->play_date = 0;
 		$this->rating = 0;
+        
 	}
 
 	function insert() {
@@ -87,7 +96,7 @@ class song {
 		if (!empty($this->artist)) {
 			$result = mysql_query("
 				SELECT *
-				FROM `".$database_table_prefix."artist`
+				FROM artist
 				WHERE `name` = '".addslashes($this->artist)."'
 			") or die(mysql_error());
 	
@@ -107,7 +116,7 @@ class song {
 		if (!empty($this->album)) {
 			$result = mysql_query("
 				SELECT *
-				FROM `".$database_table_prefix."album`
+				FROM album
 				WHERE `name` = '".addslashes($this->album)."'
 				AND `artist` = '".addslashes($this->artist_id)."'
 			") or die(mysql_error());
@@ -125,25 +134,43 @@ class song {
 				}
 			}
 		}
-
+					
+		/*$result = mysql_query("
+			UPDATE song
+			SET  rating= '".addslashes($this->rating)."'
+			, play_count = '".addslashes($this->play_count)."' 
+			WHERE name = '".addslashes($this->name)."' and 
+			artist = '".addslashes($this->artist_id)."' and 
+			album = '".addslashes($this->album_id)."' ") ;*/
+			
 		$result = mysql_query("
 			INSERT 
-			INTO `".$database_table_prefix."song`
-			( `name`
-			, `rating`
-			, `play_count`
-			, `artist`
-			, `album`
-			)
+			INTO song
+			( name 
+			, rating 
+			, play_count 
+			, artist 
+			, album 
+            , total_time
+            , play_date
+            , year
+            , size)
 			VALUES 
 			( '".addslashes($this->name)."'
 			, '".addslashes($this->rating)."'
 			, '".addslashes($this->play_count)."'
 			, '".addslashes($this->artist_id)."'
-			, '".addslashes($this->album_id)."'
-			)
+			, '".addslashes($this->album_id)."' 
+            , '".addslashes($this->total_time)."'
+            , '".addslashes($this->play_date)."'
+            , '".addslashes($this->year)."'
+            , '".addslashes($this->size)."'
+			) 
+			ON DUPLICATE KEY UPDATE 
+			rating = '".addslashes($this->rating)."'
+			, play_count = '".addslashes($this->play_count)."'+play_count
 		") or die(mysql_error());
-
+		
 		$this->id = mysql_insert_id();
 	}
 }

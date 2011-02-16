@@ -14,9 +14,10 @@ $title = 'Top Rated Artists (Weighted by # of Rated Songs and # of Plays)';
 
 $result = mysql_query("
 	SELECT 
-	  AVG(s.rating) * count(*) * SUM(s.play_count) AS rating
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."artist` a
+	  FORMAT(AVG(s.rating) * count(*) * SUM(s.play_count), 0) AS rating
+    , AVG(s.rating) * count(*) * SUM(s.play_count) AS rating
+	FROM song s
+	JOIN artist a
 	ON s.artist = a.id
 	WHERE s.rating > 0
 	GROUP BY a.id
@@ -30,16 +31,17 @@ if ($result) {
 	$result = mysql_query("
 		SELECT 
 		  a.name AS artist_name
-		, ROUND(AVG(s.rating) * count(*), 2) AS rating
-		, SUM(s.play_count) AS play_count
-		, ROUND((AVG(s.rating) * count(*) * SUM(play_count)) / $max, 2) AS percent
+		, FORMAT(ROUND(AVG(s.rating) * count(*), 2), 0) AS rating
+		, FORMAT(SUM(s.play_count), 0) AS play_count
+		, FORMAT(ROUND((AVG(s.rating) * count(*) * SUM(play_count)) / $max, 2), 0) AS percent
+        , ROUND((AVG(s.rating) * count(*) * SUM(play_count)) / $max, 2) AS percent2
 		, count(s.id) AS songs
-		FROM `".$database_table_prefix."song` s
-		JOIN `".$database_table_prefix."artist` a
+		FROM song s
+		JOIN artist a
 		ON s.artist = a.id
 		WHERE s.rating > 0
 		GROUP BY a.id
-		ORDER BY percent DESC
+		ORDER BY percent2 DESC
 	") or die(mysql_error());
 	$grid = new grid;
 	$grid->columns = array(

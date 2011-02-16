@@ -15,8 +15,8 @@ $title = 'Top Rated Albums (Weighted by # of Rated Songs)';
 $result = mysql_query("
 	SELECT 
 	  AVG(s.rating) * count(*) * SUM(play_count) AS rating
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."album` b
+	FROM song s
+	JOIN album b
 	ON s.album = b.id
 	WHERE s.rating > 0
 	GROUP BY b.id
@@ -31,14 +31,14 @@ if ($result) {
 		SELECT 
 		  b.name AS album_name
 		, a.name AS artist_name
-		, ROUND(AVG(s.rating) * count(*), 2) AS rating
-		, SUM(s.play_count) AS play_count
+		, FORMAT(ROUND(AVG(s.rating) * count(*), 2), 0) AS rating
+		, FORMAT(SUM(s.play_count), 0) AS play_count
 		, ROUND((AVG(s.rating) * count(*) * SUM(play_count)) / $max, 2) AS percent
 		, count(s.id) AS songs
-		FROM `".$database_table_prefix."song` s
-		JOIN `".$database_table_prefix."album` b
+		FROM song s
+		JOIN album b
 		ON s.album = b.id
-		JOIN `".$database_table_prefix."artist` a
+		JOIN artist a
 		ON s.artist = a.id
 		WHERE s.rating > 0
 		GROUP BY b.id

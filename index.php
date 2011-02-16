@@ -2,8 +2,8 @@
 
 // iTunes Stats
 //
-// Copyright (c) 2005-2010 Alex King. All rights reserved.
-// http://alexking.org
+// Copyright (c) 2005-2006 Alex King. All rights reserved.
+// http://alexking.org/projects/itunes-stats
 //
 // Released under the GPL license
 // http://www.opensource.org/licenses/gpl-license.php
@@ -37,15 +37,15 @@ else {
 if (!empty($_GET['action'])) {
 	switch ($_GET['action']) {
 		case 'load':
-			$result = mysql_query("TRUNCATE `".$database_table_prefix."artist`");
-			$result = mysql_query("TRUNCATE `".$database_table_prefix."album`");
-			$result = mysql_query("TRUNCATE `".$database_table_prefix."song`");
+			//$result = mysql_query("TRUNCATE artist"); 
+			//$result = mysql_query("TRUNCATE album"); 
+			//$result = mysql_query("TRUNCATE song"); 
 	
-			if (!file_exists('Library.xml')) {
+			if (!file_exists('uploads/Library.xml')) {
 				die('<p>Export your iTunes music library as <strong>Library.xml</strong> and place it in this directory.</p>');
 			}
 			
-			$data = simplexml_load_file('Library.xml');
+			$data = simplexml_load_file('uploads/Library.xml');
 			
 			if (!$data) {
 				die('<p>Error loading iTunes data.');
@@ -56,6 +56,10 @@ if (!empty($_GET['action'])) {
 				, 'Artist'
 				, 'Album'
 				, 'Rating'
+                , 'Time'
+                , 'Play Date'
+                , 'Year'
+                , 'Size'
 				, 'Play Count'
 			);
 			
@@ -89,8 +93,8 @@ if (!empty($_GET['action'])) {
 			break;
 	}
 }
-else if (isset($_GET['report']) && file_exists('reports/'.basename($_GET['report']).'.inc.php')) {
-	include('reports/'.basename($_GET['report']).'.inc.php');
+else if (isset($_GET['report']) && file_exists('reports/'.$_GET['report'].'.inc.php')) {
+	include('reports/'.$_GET['report'].'.inc.php');
 }
 else {
 	$title = 'Home';
@@ -123,6 +127,8 @@ else {
 <h2>(Re)Load Data</h2>
 <ol>
 	<li><a href="index.php?action=load">Import iTunes data to MySQL</a></li>
+	<li><a href="upload.html">Upload iTunes data</a></li>
+	<li><a href="stats.php">iTunes Stats</a></li>
 </ol>
 <h2>Reports</h2>
 <dl class="reports">
@@ -144,6 +150,6 @@ else {
 ?>
 
 		</div>
-		<p id="footer">Copyright &copy; 2005-2010 <a href="http://alexking.org">Alex King</a>. All rights reserved. Version 0.4 beta.</p>
+		<p id="footer">Copyright &copy; 2011 <a href="http://tville.thruhere.net/">twoodcc</a>. All rights reserved. Version 1.6 beta.</p>
 	</body>
 </html>

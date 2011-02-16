@@ -2,8 +2,8 @@
 
 // iTunes Stats
 //
-// Copyright (c) 2005-2010 Alex King. All rights reserved.
-// http://alexking.org
+// Copyright (c) 2005 Alex King. All rights reserved.
+// http://www.alexking.org/
 //
 // Released under the GPL license
 // http://www.opensource.org/licenses/gpl-license.php

@@ -1,0 +1,16 @@
+<html>
+<head>
+	<title>Upload</title>
+</head>
+<body>
+<h1>Upload iTunes File</h1>
+<form action="upload.php" method="post" enctype="multipart/form-data"/>
+	<div>
+		<input type="hidden" name="MAX_FILE_SIZE" value="300000000" />
+		<label for="userfile">Upload a file:</label>
+		<input type="file" name="userfile" id="userfile" />
+		<input type="submit" value="Send File" />
+	</div>
+</form>
+</body>
+</html>

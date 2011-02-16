@@ -13,14 +13,15 @@ Author URL: http://www.alexking.org/
 $result = mysql_query("
 	SELECT 
 	  a.name AS artist_name
-	, ROUND(AVG(s.rating), 2) AS rating
+	, FORMAT(ROUND(AVG(s.rating), 2), 0) AS rating
+    , ROUND(AVG(s.rating), 2) AS rating2
 	, count(s.id) AS songs
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."artist` a
+	FROM song s
+	JOIN artist a
 	ON s.artist = a.id
 	WHERE s.rating > 0
 	GROUP BY a.id
-	ORDER BY rating DESC
+	ORDER BY rating2 DESC
 ") or die(mysql_error());
 $grid = new grid;
 $grid->columns = array(

@@ -4,10 +4,10 @@
 Report Name: Most Played Albums
 Description: Shows a list of your albums in order of the most listened to songs.
 Category: Album
-Report URL: http://www.alexking.org/software/itunes_stats/
-Version: 1.0
-Author: Alex King
-Author URL: http://www.alexking.org/
+Report URL: http://tville.thruhere.net
+Version: 1.2
+Author: Tim Wood
+Author URL: http://tville.thruhere.net
 */
 
 $title = 'Most Played Albums';
@@ -16,15 +16,17 @@ $result = mysql_query("
 	SELECT 
 	  b.name AS album_name
 	, a.name AS artist_name
-	, SUM(s.play_count) as play_count
+	, FORMAT(SUM(s.play_count), 0) as play_count
 	, count(s.id) AS songs
-	FROM `".$database_table_prefix."song` s
-	JOIN `".$database_table_prefix."album` b
+    , SUM(s.play_count) as play_count2
+	FROM song s
+	JOIN album b
 	ON s.album = b.id
-	JOIN `".$database_table_prefix."artist` a
+	JOIN artist a
 	ON s.artist = a.id
 	GROUP BY b.id
-	ORDER BY play_count DESC
+	ORDER BY play_count2 DESC
+    LIMIT 500
 ") or die(mysql_error());
 $grid = new grid;
 $grid->columns = array(
